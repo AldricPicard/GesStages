@@ -44,7 +44,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50)]
     #[Assert\Regex(
         "/^(0|\+33)[1-9](\d{2}){4}$/",
-        message: "Le numéro de téléphone doit être au format français valide."
     )]
     #[Assert\NotBlank]
     private ?string $telephone = null;
@@ -61,7 +60,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $adresse = null;
 
-    #[ORM\ManyToMany(targetEntity: Entreprise::class, inversedBy: 'tilisateurs')]
+    #[ORM\ManyToMany(targetEntity: Entreprise::class, inversedBy: 'utilisateurs')]
     private Collection $entreprises;
 
     #[ORM\ManyToMany(targetEntity: Demande::class, inversedBy: 'utilisateurs')]

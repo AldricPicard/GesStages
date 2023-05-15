@@ -37,6 +37,12 @@ class Demande
     #[Assert\NotBlank]
     private ?string $nom = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $objet = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->entreprises = new ArrayCollection();
@@ -137,6 +143,30 @@ class Demande
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getObjet(): ?string
+    {
+        return $this->objet;
+    }
+
+    public function setObjet(string $objet): self
+    {
+        $this->objet = $objet;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
