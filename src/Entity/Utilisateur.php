@@ -43,10 +43,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $adresse = null;
 
-    #[ORM\ManyToMany(targetEntity: entreprise::class, inversedBy: 'utilisateurs')]
+    #[ORM\ManyToMany(targetEntity: Entreprise::class, inversedBy: 'tilisateurs')]
     private Collection $entreprises;
 
-    #[ORM\ManyToMany(targetEntity: demande::class, inversedBy: 'utilisateurs')]
+    #[ORM\ManyToMany(targetEntity: Demande::class, inversedBy: 'utilisateurs')]
     private Collection $demandes;
 
     public function __construct()
@@ -181,7 +181,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->entreprises;
     }
 
-    public function addEntreprise(entreprise $entreprise): self
+    public function addEntreprise(Entreprise $entreprise): self
     {
         if (!$this->entreprises->contains($entreprise)) {
             $this->entreprises->add($entreprise);
@@ -190,7 +190,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeEntreprise(entreprise $entreprise): self
+    public function removeEntreprise(Entreprise $entreprise): self
     {
         $this->entreprises->removeElement($entreprise);
 
@@ -205,7 +205,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->demandes;
     }
 
-    public function addDemande(demande $demande): self
+    public function addDemande(Demande $demande): self
     {
         if (!$this->demandes->contains($demande)) {
             $this->demandes->add($demande);
@@ -214,7 +214,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeDemande(demande $demande): self
+    public function removeDemande(Demande $demande): self
     {
         $this->demandes->removeElement($demande);
 

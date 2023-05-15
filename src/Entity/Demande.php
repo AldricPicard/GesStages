@@ -24,7 +24,7 @@ class Demande
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
 
-    #[ORM\OneToMany(mappedBy: 'demande', targetEntity: entreprise::class)]
+    #[ORM\OneToMany(mappedBy: 'demande', targetEntity: Entreprise::class)]
     private Collection $entreprises;
 
     #[ORM\ManyToMany(targetEntity: Utilisateur::class, mappedBy: 'demandes')]
@@ -76,7 +76,7 @@ class Demande
         return $this->entreprises;
     }
 
-    public function addEntreprise(entreprise $entreprise): self
+    public function addEntreprise(Entreprise $entreprise): self
     {
         if (!$this->entreprises->contains($entreprise)) {
             $this->entreprises->add($entreprise);
@@ -86,7 +86,7 @@ class Demande
         return $this;
     }
 
-    public function removeEntreprise(entreprise $entreprise): self
+    public function removeEntreprise(Entreprise $entreprise): self
     {
         if ($this->entreprises->removeElement($entreprise)) {
             // set the owning side to null (unless already changed)
