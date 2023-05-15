@@ -70,7 +70,7 @@ class CurriculumVitae
 
     public function getCompetences(): ?string
     {
-        return $this->Compétences;
+        return $this->Competences;
     }
 
     public function setCompetences(string $Competences): self
