@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -40,6 +42,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $adresse = null;
+
+    #[ORM\ManyToMany(targetEntity: entreprise::class, inversedBy: 'utilisateurs')]
+    private Collection $entreprises;
+
+    #[ORM\ManyToMany(targetEntity: demande::class, inversedBy: 'utilisateurs')]
+    private Collection $demandes;
+
+    public function __construct()
+    {
+        $this->entreprises = new ArrayCollection();
+        $this->demandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +169,54 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, entreprise>
+     */
+    public function getEntreprises(): Collection
+    {
+        return $this->entreprises;
+    }
+
+    public function addEntreprise(entreprise $entreprise): self
+    {
+        if (!$this->entreprises->contains($entreprise)) {
+            $this->entreprises->add($entreprise);
+        }
+
+        return $this;
+    }
+
+    public function removeEntreprise(entreprise $entreprise): self
+    {
+        $this->entreprises->removeElement($entreprise);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, demande>
+     */
+    public function getDemandes(): Collection
+    {
+        return $this->demandes;
+    }
+
+    public function addDemande(demande $demande): self
+    {
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes->add($demande);
+        }
+
+        return $this;
+    }
+
+    public function removeDemande(demande $demande): self
+    {
+        $this->demandes->removeElement($demande);
 
         return $this;
     }
