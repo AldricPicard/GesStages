@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\UtilisateurRepository;
 use App\State\UserPasswordHasher;
@@ -15,11 +18,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 //hash de mdp
+//#[ApiResource(
+//    operations: [
+//        new Post(processor: UserPasswordHasher::class),
+//        new Get(normalizationContext: ['groups' => 'conference:item']),
+//        new GetCollection(normalizationContext: ['groups' => 'conference:list'])
+//    ],
+//)]
 #[ApiResource(
     operations: [
         new Post(processor: UserPasswordHasher::class),
+        new Get(),
+        new GetCollection(),
     ],
 )]
+
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
