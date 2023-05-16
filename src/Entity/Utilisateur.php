@@ -18,11 +18,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 //hash de mdp
+//#[ApiResource(
+//    operations: [
+//        new Post(processor: UserPasswordHasher::class),
+//        new Get(normalizationContext: ['groups' => 'conference:item']),
+//        new GetCollection(normalizationContext: ['groups' => 'conference:list'])
+//    ],
+//)]
 #[ApiResource(
     operations: [
         new Post(processor: UserPasswordHasher::class),
-        new Get(normalizationContext: ['groups' => 'conference:item']),
-        new GetCollection(normalizationContext: ['groups' => 'conference:list'])
+        new Get(),
+        new GetCollection(),
     ],
 )]
 
