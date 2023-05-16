@@ -20,7 +20,6 @@ class Demande
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\Date]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
