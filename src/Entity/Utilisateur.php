@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ApiResource(
     operations: [
         new Post(processor: UserPasswordHasher::class),
-    ]
+    ],
 )]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -66,6 +66,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Demande::class, inversedBy: 'utilisateurs')]
     private Collection $demandes;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $situation = null;
 
     public function __construct()
     {
@@ -235,6 +238,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeDemande(Demande $demande): self
     {
         $this->demandes->removeElement($demande);
+
+        return $this;
+    }
+
+    public function getSituation(): ?string
+    {
+        return $this->situation;
+    }
+
+    public function setSituation(?string $situation): self
+    {
+        $this->situation = $situation;
 
         return $this;
     }
