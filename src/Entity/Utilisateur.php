@@ -17,7 +17,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-//hash de mdp
 //#[ApiResource(
 //    operations: [
 //        new Post(processor: UserPasswordHasher::class),
@@ -27,6 +26,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //)]
 #[ApiResource(
     operations: [
+        //hash de mdp
         new Post(processor: UserPasswordHasher::class),
         new Get(),
         new GetCollection(),
@@ -82,6 +82,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $situation = null;
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Demande::class)]
+    private Collection $demandes;
 
     public function __construct()
     {
@@ -203,6 +206,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Demande>
+     */
+    public function getDemandes(): Collection
+    {
+        return $this->demandes;
+    }
+
+    public function addDemande(Demande $demande): self
+    {
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes->add($demande);
+            $demande->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemande(Demande $demande): self
+    {
+        if ($this->demandes->removeElement($demande)) {
+            // set the owning side to null (unless already changed)
+            if ($demande->getUtilisateur() === $this) {
+                $demande->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }

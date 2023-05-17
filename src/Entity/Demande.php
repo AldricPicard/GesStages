@@ -18,10 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: DemandeRepository::class)]
 #[ApiResource(
     operations: [
-    new GetCollection(
-        uriTemplate: '/mesDemandes',
-        controller: HomeController::class
-    )
+        new Post(),
+        new GetCollection()
     ],
 )]
 class Demande

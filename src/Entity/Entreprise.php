@@ -45,16 +45,13 @@ class Entreprise
     #[Assert\Email]
     private ?string $email = null;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateur::class, mappedBy: 'entreprises')]
-    private Collection $utilisateurs;
-
-    #[ORM\ManyToOne(inversedBy: 'entreprises')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Demande $demande = null;
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Demande::class)]
+    private Collection $demandes;
 
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
+        $this->demandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,41 +108,33 @@ class Entreprise
     }
 
     /**
-     * @return Collection<int, Utilisateur>
+     * @return Collection<int, Demande>
      */
-    public function getUtilisateurs(): Collection
+    public function getDemandes(): Collection
     {
-        return $this->utilisateurs;
+        return $this->demandes;
     }
 
-    public function addUtilisateur(Utilisateur $utilisateur): self
+    public function addDemande(Demande $demande): self
     {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs->add($utilisateur);
-            $utilisateur->addEntreprise($this);
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes->add($demande);
+            $demande->setEntreprise($this);
         }
 
         return $this;
     }
 
-    public function removeUtilisateur(Utilisateur $utilisateur): self
+    public function removeDemande(Demande $demande): self
     {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            $utilisateur->removeEntreprise($this);
+        if ($this->demandes->removeElement($demande)) {
+            // set the owning side to null (unless already changed)
+            if ($demande->getEntreprise() === $this) {
+                $demande->setEntreprise(null);
+            }
         }
 
         return $this;
     }
 
-    public function getDemande(): ?Demande
-    {
-        return $this->demande;
-    }
-
-    public function setDemande(?Demande $demande): self
-    {
-        $this->demande = $demande;
-
-        return $this;
-    }
 }
