@@ -74,12 +74,6 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $adresse = null;
 
-    #[ORM\ManyToMany(targetEntity: Entreprise::class, inversedBy: 'utilisateurs')]
-    private Collection $entreprises;
-
-    #[ORM\ManyToMany(targetEntity: Demande::class, inversedBy: 'utilisateurs')]
-    private Collection $demandes;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $situation = null;
 
@@ -239,64 +233,5 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, entreprise>
-     */
-    public function getEntreprises(): Collection
-    {
-        return $this->entreprises;
-    }
-
-    public function addEntreprise(Entreprise $entreprise): self
-    {
-        if (!$this->entreprises->contains($entreprise)) {
-            $this->entreprises->add($entreprise);
-        }
-
-        return $this;
-    }
-
-    public function removeEntreprise(Entreprise $entreprise): self
-    {
-        $this->entreprises->removeElement($entreprise);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, demande>
-     */
-    public function getDemandes(): Collection
-    {
-        return $this->demandes;
-    }
-
-    public function addDemande(Demande $demande): self
-    {
-        if (!$this->demandes->contains($demande)) {
-            $this->demandes->add($demande);
-        }
-
-        return $this;
-    }
-
-    public function removeDemande(Demande $demande): self
-    {
-        $this->demandes->removeElement($demande);
-
-        return $this;
-    }
-
-    public function getSituation(): ?string
-    {
-        return $this->situation;
-    }
-
-    public function setSituation(?string $situation): self
-    {
-        $this->situation = $situation;
-
-        return $this;
-    }
+    
 }

@@ -36,12 +36,6 @@ class Demande
     #[Assert\NotBlank]
     private ?string $statut = null;
 
-    #[ORM\OneToMany(mappedBy: 'demande', targetEntity: Entreprise::class)]
-    private Collection $entreprises;
-
-    #[ORM\ManyToMany(targetEntity: Utilisateur::class, mappedBy: 'demandes')]
-    private Collection $utilisateurs;
-
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $nom = null;
@@ -53,6 +47,14 @@ class Demande
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $description = null;
+
+    #[ORM\ManyToOne(inversedBy: 'demandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Entreprise $entreprise = null;
+
+    #[ORM\ManyToOne(inversedBy: 'demandes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $utilisateur = null;
 
     public function __construct()
     {
@@ -89,63 +91,6 @@ class Demande
         return $this;
     }
 
-    /**
-     * @return Collection<int, entreprise>
-     */
-    public function getEntreprises(): Collection
-    {
-        return $this->entreprises;
-    }
-
-    public function addEntreprise(Entreprise $entreprise): self
-    {
-        if (!$this->entreprises->contains($entreprise)) {
-            $this->entreprises->add($entreprise);
-            $entreprise->setDemande($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEntreprise(Entreprise $entreprise): self
-    {
-        if ($this->entreprises->removeElement($entreprise)) {
-            // set the owning side to null (unless already changed)
-            if ($entreprise->getDemande() === $this) {
-                $entreprise->setDemande(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Utilisateur>
-     */
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
-
-    public function addUtilisateur(Utilisateur $utilisateur): self
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs->add($utilisateur);
-            $utilisateur->addDemande($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateur $utilisateur): self
-    {
-        if ($this->utilisateurs->removeElement($utilisateur)) {
-            $utilisateur->removeDemande($this);
-        }
-
-        return $this;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -178,6 +123,30 @@ class Demande
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getEntreprise(): ?Entreprise
+    {
+        return $this->entreprise;
+    }
+
+    public function setEntreprise(?Entreprise $entreprise): self
+    {
+        $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    public function getUtilisateur(): ?Utilisateur
+    {
+        return $this->utilisateur;
+    }
+
+    public function setUtilisateur(?Utilisateur $utilisateur): self
+    {
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }
