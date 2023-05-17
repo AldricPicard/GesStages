@@ -17,7 +17,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-//hash de mdp
 //#[ApiResource(
 //    operations: [
 //        new Post(processor: UserPasswordHasher::class),
@@ -27,6 +26,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //)]
 #[ApiResource(
     operations: [
+        //hash de mdp
         new Post(processor: UserPasswordHasher::class),
         new Get(),
         new GetCollection(),
@@ -74,14 +74,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $adresse = null;
 
-    #[ORM\ManyToMany(targetEntity: Entreprise::class, inversedBy: 'utilisateurs')]
-    private Collection $entreprises;
-
-    #[ORM\ManyToMany(targetEntity: Demande::class, inversedBy: 'utilisateurs')]
-    private Collection $demandes;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $situation = null;
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Demande::class)]
+    private Collection $demandes;
 
     public function __construct()
     {
@@ -208,31 +205,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, entreprise>
-     */
-    public function getEntreprises(): Collection
-    {
-        return $this->entreprises;
-    }
-
-    public function addEntreprise(Entreprise $entreprise): self
-    {
-        if (!$this->entreprises->contains($entreprise)) {
-            $this->entreprises->add($entreprise);
-        }
-
-        return $this;
-    }
-
-    public function removeEntreprise(Entreprise $entreprise): self
-    {
-        $this->entreprises->removeElement($entreprise);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, demande>
+     * @return Collection<int, Demande>
      */
     public function getDemandes(): Collection
     {
@@ -243,6 +216,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->demandes->contains($demande)) {
             $this->demandes->add($demande);
+            $demande->setUtilisateur($this);
         }
 
         return $this;
@@ -250,20 +224,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeDemande(Demande $demande): self
     {
-        $this->demandes->removeElement($demande);
+        if ($this->demandes->removeElement($demande)) {
+            // set the owning side to null (unless already changed)
+            if ($demande->getUtilisateur() === $this) {
+                $demande->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }
-
-    public function getSituation(): ?string
-    {
-        return $this->situation;
-    }
-
-    public function setSituation(?string $situation): self
-    {
-        $this->situation = $situation;
-
-        return $this;
-    }
+    
 }
